@@ -17,7 +17,7 @@ var Keyboard = (function() {
 		key = e.keyCode;
 
 		if (capturedKeys.indexOf(key) !== -1) {
-			e.preventDefault();
+			//e.preventDefault();
 
 			if (pressedKeys[key] === 0) {
 				pressedKeys[key] = frame + 1;
@@ -28,7 +28,7 @@ var Keyboard = (function() {
 	}
 
 	function keyUpHandler(e) {
-		e.preventDefault();
+		//e.preventDefault();
 		pressedKeys[e.keyCode] = 0;
 
 		//console.log("up", e.keyCode, frame, pressedKeys);
