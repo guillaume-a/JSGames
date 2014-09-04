@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html class="no-js">
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<title>Flappy Piaf</title>
+	<meta name="description" content="">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<script src="js/engine/Loader.js"></script>
+	<script src="js/engine/Game.js"></script>
+	<script src="js/demo/flappy/main.js"></script>
+
+	<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+	<script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+
+	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+
+	<style>
+		body {
+			margin-top: 20px;
+		}
+		#screen {
+			display: none;
+		}
+	</style>
+
+	<script>
+		$(document).on('ready', function() {
+			reloadScoreBoard();
+
+			$("#scoreYesterday").load("scoreboard/flappy/get.php?type=yesterday");
+			$("#scoreDaily").on('click', '.btn', getReplay);
+			$("#setPlayer").on('click', setPlayerName);
+
+			setInterval(reloadScoreBoard, 10000);
+		});
+
+		function reloadScoreBoard() {
+			$("#scoreDaily").load("scoreboard/flappy/get.php?type=daily");
+		}
+
+		function getReplay() {
+			loadReplay($(this).attr('data-uid'), $(this).attr('data-date'));
+		}
+
+		function setPlayerName() {
+			player = $("#playerName").val();
+
+			$("#messagePseudo").hide();
+			$("#screen").fadeIn('fast');
+		}
+	</script>
+</head>
+
+<body>
+
+	<div class="container">
+
+		<nav class="navbar navbar-default" role="navigation">
+			<div class="container-fluid">
+
+				<div class="navbar-header">
+					<a class="navbar-brand" href="#">Flappy Piaf</a>
+				</div>
+
+				<div class="navbar-collapse">
+					<form class="navbar-form navbar-left">
+						<button type="button" class="btn btn-default" onclick="newGame();">Nouveau (N)</button>
+						<button type="button" class="btn btn-default" onclick="removeReplay();">Suppr. replay (R)</button>
+						<button type="button" class="btn btn-default" disabled="disabled">Pause (P)</button>
+
+						<div class="form-group">
+							<div class="input-group">
+								<span class="input-group-addon">Pseudo</span>
+								<input id="playerName" type="text" class="form-control">
+								<span class="input-group-btn"><button id="setPlayer" class="btn btn-default" type="button">Ok</button></span>
+							</div>
+						</div>
+					</form>
+
+					<ul class="nav navbar-nav navbar-right">
+						<li><a href="#" data-toggle="modal" data-target="#changelog">Changelog</a>
+						</li>
+					</ul>
+
+				</div>
+			</div>
+		</nav>
+
+		<div class="row">
+			<div class="col-md-8">
+				<canvas id='screen' width='750' height='400'></canvas>
+				<h1 id="messagePseudo">Entre un pseudo en premier</h1>
+			</div>
+			<div class="col-md-4">
+				<div id="scoreDaily"></div>
+				<div id="scoreYesterday"></div>
+			</div>
+		</div>
+	</div>
+
+
+	<div id="changelog" class="modal fade">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Fermer</span>
+					</button>
+					<h4 class="modal-title">Changelog</h4>
+				</div>
+				<div class="modal-body">
+
+					<h3>build 20140904</h3>
+					<ul>
+						<li>securiser la vie de l'oiseau</li>
+						<li>securiser le score coté JS</li>
+						<li>sécurisatino de la transaction du score</li>
+					</ul>
+				
+					<h3>build 20140903</h3>
+
+					<strong>Scoring : </strong>
+					<ul>
+						<li>position en cas d'egalité</li>
+						<li>podium de la veille</li>
+						<li>garder le pseudo en session</li>
+					</ul>
+					<strong>Flappy : </strong>
+					<ul>
+						<li>touche du haut pour demarrer</li>
+						<li>hitbox simplifiés pour les wall</li>
+						<li>mode pause</li>
+						<li>largeur de l'ecran de jeu</li>
+					</ul>
+
+					<h3>build 20140902</h3>
+
+					<strong>Scoring : </strong>
+					<ul>
+						<li>1 score par pseudo</li>
+						<li>position</li>
+						<li>limiter le nombre de score affiché</li>
+					</ul>
+					<strong>Flappy : </strong>
+					<ul>
+						<li>persistent worlds</li>
+						<li>jouer avec le fleche du haut</li>
+						<li>replay</li>
+						<li>ghosts</li>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<!-- /.modal-content -->
+		</div>
+		<!-- /.modal-dialog -->
+	</div>
+	<!-- /.modal -->
+</body>
+
+</html>
