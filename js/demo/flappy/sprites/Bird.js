@@ -111,6 +111,7 @@ Bird.prototype.update = function(step) {
 
 	if (this.ghost) {
 		if ((typeof this.frames[raceFrame] !== 'undefined')) {
+                        //console.log(this.frames[raceFrame].y);
 			this.y = this.frames[raceFrame].y;
 			this.velocity.y = this.frames[raceFrame].vy;
 		} else {
