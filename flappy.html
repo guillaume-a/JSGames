@@ -33,6 +33,7 @@
                 reloadScoreBoard();
 
                 $("#scoreYesterday").load("scoreboard/flappy/get.php?type=yesterday");
+                $("#hallOfFame").load("scoreboard/flappy/medals.php");
                 $("#scoreDaily").on('click', '.btn', getReplay);
                 $("#setPlayer").on('click', setPlayerName);
 
@@ -99,6 +100,7 @@
                 <div class="col-md-4">
                     <div id="scoreDaily"></div>
                     <div id="scoreYesterday"></div>
+                    <div id="hallOfFame"></div>
                 </div>
             </div>
         </div>
@@ -122,6 +124,7 @@
                             <li>securiser le score coté JS</li>
                             <li>sécurisatino de la transaction du score</li>
                             <li>migration des scores en BDD</li>
+                            <li>Ajout du tableau d'honneur</li>
                         </ul>
 
                         <strong>Engine : </strong>
