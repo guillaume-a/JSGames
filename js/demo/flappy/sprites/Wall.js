@@ -1,58 +1,62 @@
 function Wall() {
-	//super()
-	Sprite.call(this);
+    //super()
+    Sprite.call(this);
 
-	//private
-	var score = 0;
+    //private
+    var score = 0;
 
-	//
-	//this.position = _x;
-	this.x = Wall.biggestX;
-	this.width = 90;
-	this.height = Game.screenHeight * 0.5;
+    //
+    //this.position = _x;
+    this.x = Wall.biggestX;
+    this.width = 90;
+    this.height = Game.screenHeight * 0.5;
 
-	this.scored = false;
+    this.scored = false;
 
-	this.hitBoxTop = Hitmask.newBox(this, 15, 0, this.width - 25, this.height);
-	this.hitBoxBottom = Hitmask.newBox(this, 15, 0, this.width - 25, this.height);
+    this.hitBoxTop = Hitmask.newBox(this, 15, 0, this.width - 25, this.height);
+    this.hitBoxBottom = Hitmask.newBox(this, 15, 0, this.width - 25, this.height);
 
-	//
-	this.circleBottomY = 35;
-	this.circleTopY = 539;
+    //
+    this.circleBottomY = 35;
+    this.circleTopY = 539;
 
-	this.circleBottom = Hitmask.newCircle(this, 42, this.circleBottomY, 28);
-	this.circleTop = Hitmask.newCircle(this, 44, this.circleTopY, 29);
+    this.circleBottom = Hitmask.newCircle(this, 42, this.circleBottomY, 28);
+    this.circleTop = Hitmask.newCircle(this, 44, this.circleTopY, 29);
 
-	this.addHitMask(this.circleBottom);
-	this.addHitMask(this.circleTop);
+    this.addHitMask(this.circleBottom);
+    this.addHitMask(this.circleTop);
 
-	//
-	this.boxTop = Hitmask.newBox(this, 20, 0, this.width - 40, this.height);
-	this.boxBottom = Hitmask.newBox(this, 15, 0, this.width - 40, this.height);
+    //
+    this.boxTop = Hitmask.newBox(this, 20, 0, this.width - 40, this.height);
+    this.boxBottom = Hitmask.newBox(this, 15, 0, this.width - 40, this.height);
 
-	this.addHitMask(this.boxTop);
-	this.addHitMask(this.boxBottom);
+    this.addHitMask(this.boxTop);
+    this.addHitMask(this.boxBottom);
 
-	this.getScore = function() {
-		return score;
-	};
+    this.getScore = function() {
+        return score;
+    };
 
-	this.scoreTest = function() {
-		//Derriere l'oiseau
-		if (this.scored === false && this.x + this.width < bird.x) {
-			this.scored = true;
+    this.resetScore = function() {
+        score = 0;
+    };
 
-			score++;
+    this.scoreTest = function() {
+        //Derriere l'oiseau
+        if (this.scored === false && this.x + this.width < bird.x) {
+            this.scored = true;
 
-			var globalScore = Wall.getTotalScore();
-			
-			Wall.globalVelocityX = Math.max(-2000, -3 * Math.ceil(globalScore / 5) - 200);
-			Wall.holeSize = Math.max(50, -Math.ceil(globalScore / 5) + 80);
-			Wall.holeAmplitude = Math.min(Game.screenHeight / 2, 10 * Math.ceil(globalScore / 5) + 60);
-		}
-	};
+            score++;
 
-	Wall.pool.push(this);
+            var globalScore = Wall.getTotalScore();
+
+            Wall.globalVelocityX = Math.max(-2000, -3 * Math.ceil(globalScore / 5) - 200);
+            Wall.holeSize = Math.max(50, -Math.ceil(globalScore / 5) + 80);
+            Wall.holeAmplitude = Math.min(Game.screenHeight / 2, 10 * Math.ceil(globalScore / 5) + 60);
+        }
+    };
+
+    Wall.pool.push(this);
 }
 
 //Inheritance
@@ -65,99 +69,100 @@ Wall.initialized = false;
 Wall.pool = [];
 
 Wall.initGlobal = function() {
-	Wall.globalVelocityX = -200;
-	Wall.holeSize = 80;
-	Wall.holeAmplitude = 60;
-	Wall.holeLastPosition = Game.screenHeight * 0.5;
-	Wall.biggestX = 100;
+    Wall.globalVelocityX = -200;
+    Wall.holeSize = 80;
+    Wall.holeAmplitude = 60;
+    Wall.holeLastPosition = Game.screenHeight * 0.5;
+    Wall.biggestX = 100;
 };
 
 Wall.getTotalScore = function() {
-	var score = 0;
+    var score = 0;
 
-	Wall.pool.forEach(function(wall) {
-		score += wall.getScore();
-	});
+    Wall.pool.forEach(function(wall) {
+        score += wall.getScore();
+    });
 
-	return score;
+    return score;
 };
 
 //Public
 Wall.prototype.randomize = function(_xOffset) {
-	_xOffset = typeof _xOffset !== 'undefined' ? _xOffset : 0;
+    _xOffset = typeof _xOffset !== 'undefined' ? _xOffset : 0;
 
-	this.scored = false;
+    this.scored = false;
 
-	//console.log(Wall.biggestX);
+    //console.log(Wall.biggestX);
 
-	Wall.biggestX += 210;
-	this.x = Wall.biggestX;
+    Wall.biggestX += 210;
+    this.x = Wall.biggestX;
 
-	var offset = Math.srandomIntRange(-Wall.holeAmplitude, Wall.holeAmplitude);
+    var offset = Math.srandomIntRange(-Wall.holeAmplitude, Wall.holeAmplitude);
 
-	Wall.holeLastPosition += offset;
+    Wall.holeLastPosition += offset;
 
-	Wall.holeLastPosition = Math.max(Math.min(Wall.holeLastPosition, Game.screenHeight - 50), 50);
+    Wall.holeLastPosition = Math.max(Math.min(Wall.holeLastPosition, Game.screenHeight - 50), 50);
 
-	this.hitBoxTop.h = Wall.holeLastPosition - Wall.holeSize / 2;
+    this.hitBoxTop.h = Wall.holeLastPosition - Wall.holeSize / 2;
 
-	this.hitBoxBottom.y = Wall.holeLastPosition + Wall.holeSize / 2;
-	this.hitBoxBottom.h = Game.screenHeight - this.hitBoxBottom.y;
+    this.hitBoxBottom.y = Wall.holeLastPosition + Wall.holeSize / 2;
+    this.hitBoxBottom.h = Game.screenHeight - this.hitBoxBottom.y;
 
-	this.circleBottom.y = this.circleBottomY + Wall.holeLastPosition + Wall.holeSize / 2;
-	this.circleTop.y = this.circleTopY - Wall.spriteSheet.height + this.hitBoxTop.h;
+    this.circleBottom.y = this.circleBottomY + Wall.holeLastPosition + Wall.holeSize / 2;
+    this.circleTop.y = this.circleTopY - Wall.spriteSheet.height + this.hitBoxTop.h;
 
-	this.boxTop.h = (Wall.holeLastPosition - Wall.holeSize / 2) - 65;
+    this.boxTop.h = (Wall.holeLastPosition - Wall.holeSize / 2) - 65;
 
-	this.boxBottom.y = (Wall.holeLastPosition + Wall.holeSize / 2) + 65;
-	this.boxBottom.h = Game.screenHeight - this.boxBottom.y;
+    this.boxBottom.y = (Wall.holeLastPosition + Wall.holeSize / 2) + 65;
+    this.boxBottom.h = Game.screenHeight - this.boxBottom.y;
 };
 
 //Override
 Wall.prototype.reset = function() {
-	if (!Wall.initialized) {
-		Wall.initialized = true;
-		Wall.initGlobal();
-	}
-
-	this.randomize();
+    if (!Wall.initialized) {
+        Wall.initialized = true;
+        Wall.initGlobal();
+    }
+    
+    this.resetScore();
+    this.randomize();
 };
 
 Wall.prototype.update = function(step) {
 
-	if (Game.getProp('paused') === true || Game.getProp('gamestarted') === false || Game.getProp('gameover') === true || Game.getProp('gamewin') === true) {
-		return false;
-	}
+    if (Game.getProp('paused') === true || Game.getProp('gamestarted') === false || Game.getProp('gameover') === true || Game.getProp('gamewin') === true) {
+        return false;
+    }
 
-	this.velocity.x = Wall.globalVelocityX;
+    this.velocity.x = Wall.globalVelocityX;
 
-	/*
-	if (Game.getProp('debug')) {
-		this.velocity.x = 0;
+    /*
+     if (Game.getProp('debug')) {
+     this.velocity.x = 0;
+     
+     if (Keyboard.isPressed(KEY_LEFT)) {
+     this.velocity.x = -10;
+     }
+     
+     if (Keyboard.isPressed(KEY_RIGHT)) {
+     this.velocity.x = 10;
+     }
+     }
+     */
 
-		if (Keyboard.isPressed(KEY_LEFT)) {
-			this.velocity.x = -10;
-		}
+    this.applyPhysic(step);
 
-		if (Keyboard.isPressed(KEY_RIGHT)) {
-			this.velocity.x = 10;
-		}
-	}
-	*/
+    this.scoreTest();
 
-	this.applyPhysic(step);
+    //Hors de l'ecran
+    if (this.x < -this.width) {
+        this.randomize();
+    }
 
-	this.scoreTest();
-
-	//Hors de l'ecran
-	if (this.x < -this.width) {
-		this.randomize();
-	}
-
-	return true;
+    return true;
 };
 
 Wall.prototype.render = function(dt, ctx, w, h) {
-	ctx.drawImage(Wall.spriteSheet, 0, Wall.spriteSheet.height - this.hitBoxTop.h, this.width, this.hitBoxTop.h, this.x, this.y, this.width, this.hitBoxTop.h);
-	ctx.drawImage(Wall.spriteSheet, 0, 0, this.width, this.hitBoxBottom.h, this.x, this.y + this.hitBoxBottom.y, this.width, this.hitBoxBottom.h);
+    ctx.drawImage(Wall.spriteSheet, 0, Wall.spriteSheet.height - this.hitBoxTop.h, this.width, this.hitBoxTop.h, this.x, this.y, this.width, this.hitBoxTop.h);
+    ctx.drawImage(Wall.spriteSheet, 0, 0, this.width, this.hitBoxBottom.h, this.x, this.y + this.hitBoxBottom.y, this.width, this.hitBoxBottom.h);
 };
